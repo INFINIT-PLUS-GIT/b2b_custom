@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <template id="management_view">
+            <t t-call="website.layout">
+                <div class="row">
+                    <div class="col-md-3 col-xl-2">
+                        <div class="m-5">
+                            <nav>
+                                <ul class="nav flex-column">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="/user_manager/create_user">User management</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/user_manager/payment">Register payment</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <main class="col-md-9 col-xl-8 py-md-3 pl-md-5">
+                        <t t-raw="0"/>
+                    </main>
+                </div>
+            </t>
+        </template>
+        <template id="management_user_form">
+            <t t-call="manage_users_website.management_view">
+                <t t-set="group_categ" t-value="request.env['ir.module.category'].sudo().search([('name', '=', 'Business')])"/>
+                <t t-set="user_groups" t-value="request.env['res.groups'].sudo().search([('category_id', '=', group_categ.id)])"/>
+                <div id="user_form">
+                    <h1>Create user</h1>
+                    <form id="createUserForm">
+                        <div class="form-group">
+                            <label for="user-name">Name</label>
+                            <input type="text" class="form-control" id="user-name" name="user-name"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-email">Email address</label>
+                            <input type="email" class="form-control" id="user-email" name="user-email"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-role">Role</label>
+                            <select class="form-control" id="user-role" name="user-role">
+                                <option>Select...</option>
+                                <t t-foreach="user_groups" t-as="group">
+                                    <option t-att-value="group.id">
+                                        <!--                                            t-att-selected="group.id == int(country_id) if country_id else country.id == partner.country_id.id">-->
+                                        <t t-esc="group.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-password">Password</label>
+                            <input type="password" class="form-control" id="user-password" name="user-password"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </t>
+        </template>
+        <template id="management_payment">
+            <t t-call="manage_users_website.management_view">
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="module_user_management">
+            <field name="name">manage_users_website.user_creation_inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_title']/h2" position="after">
+                    <label for="belonging_company_id" class="oe_edit_only" string="Belonging company"/>
+                    <h2><field name="belonging_company_id" domain="[('is_company', '=', True)]"/></h2>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
