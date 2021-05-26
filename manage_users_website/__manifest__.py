@@ -28,9 +28,10 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        'security/res_group.xml',
         'views/assets.xml',
-        'views/res_group.xml',
         'views/user_create.xml',
         'views/templates.xml',
+        'views/portal_users.xml',
     ],
 }

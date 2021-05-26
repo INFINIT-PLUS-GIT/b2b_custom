@@ -5,21 +5,24 @@
             <field name="description">User access level for User Management module</field>
             <field name="sequence">20</field>
         </record>
-        <record id="business_buyer" model="res.groups">
-            <field name="name">Buyer</field>
+        <record id="business_client" model="res.groups">
+            <field name="name">Client</field>
             <field name="category_id" ref="module_user_management"/>
         </record>
         <record id="business_reader" model="res.groups">
             <field name="name">Reader</field>
             <field name="category_id" ref="module_user_management"/>
+            <field name="implied_ids" eval="[(4, ref('business_client'))]"/>
         </record>
-        <record id="business_client" model="res.groups">
-            <field name="name">Client</field>
+        <record id="business_buyer" model="res.groups">
+            <field name="name">Buyer</field>
             <field name="category_id" ref="module_user_management"/>
+            <field name="implied_ids" eval="[(4, ref('business_reader'))]"/>
         </record>
         <record id="business_administrator" model="res.groups">
             <field name="name">Administrator</field>
             <field name="category_id" ref="module_user_management"/>
+            <field name="implied_ids" eval="[(4, ref('business_buyer'))]"/>
         </record>
     </data>
 </odoo>

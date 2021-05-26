@@ -1,0 +1,66 @@
+<!-- ##########################################################################
+#
+#   Copyright (c) 2018-Present INFINIT-PLUS CIA. LTDA. (<https://www.infinit-plus.com/>)
+#   See LICENSE file for full copyright and licensing details.
+#   "License URL : <https://www.infinit-plus.com/license.html/>"
+#
+########################################################################## -->
+<odoo>
+    <template id="portal_my_home_menu_buss_users" name="Portal layout : business users menu" inherit_id="portal.portal_breadcrumbs" priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li class="breadcrumb-item active">
+                Business users
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_business_users" name="Portal My Home : transaction entries" inherit_id="portal.portal_my_home" priority="30">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-if="business_users_count" t-call="portal.portal_docs_entry">
+                <t t-set="title">Business users</t>
+                <t t-set="url" t-value="'/my/business/users'"/>
+                <t t-set="count" t-value="business_users_count"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_business_users" name="Business users">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Business users</t>
+            </t>
+            <div class="w-100 text-right">
+                <a href="/user_manager/create_user" class="btn btn-primary">
+                    Create user
+                </a>
+            </div>
+            <t t-if="not users">
+                <p>There are currently no users for this business.</p>
+            </t>
+            <t t-if="users" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Name #</th>
+                        <th>Email</th>
+                        <th>Creation date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="users" t-as="user">
+                        <tr>
+                            <td>
+                                <t t-esc="user.name"/>
+                            </td>
+                            <td>
+                                <t t-esc="user.login"/>
+                            </td>
+                            <td><span t-field="user.create_date" t-options='{"format": "dd/MM/yyyy"}'/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+</odoo>

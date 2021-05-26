@@ -1,4 +1,4 @@
-odoo.define('manage_users_website.user_management', function (require) {
+odoo.define('manage_users_website.user_management', ['web.rpc'], function (require) {
     "use strict";
 
     var rpc = require('web.rpc');
@@ -21,7 +21,7 @@ odoo.define('manage_users_website.user_management', function (require) {
             method: 'create_user',
             args: [formData],
         }).then(function (data) {
-            console.log(data)
+            $('#confirmModal').modal('show')
         })
     })
 
