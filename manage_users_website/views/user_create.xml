@@ -6,8 +6,8 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('oe_title')]/h2" position="after">
-                    <label for="belonging_company_id" class="oe_edit_only" string="Belonging company" attrs="{'invisible': [('groups_id','=',9)]}"/>
-                    <h2><field name="belonging_company_id" domain="[('is_company', '=', True)]" attrs="{'invisible': [('groups_id','=',9)]}"/></h2>
+                    <label for="belonging_company_id" class="oe_edit_only" string="Belonging company""/>
+                    <h2><field name="belonging_company_id" domain="[('is_company', '=', True)]"/></h2>
                 </xpath>
             </field>
         </record>
