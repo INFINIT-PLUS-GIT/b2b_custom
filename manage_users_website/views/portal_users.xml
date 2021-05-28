@@ -31,8 +31,10 @@
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Business users</t>
             </t>
+            <t t-set="group_categ" t-value="request.env['ir.module.category'].sudo().search([('name', '=', 'Business')])"/>
+            <t t-set="user_groups" t-value="request.env['res.groups'].sudo().search([('category_id', '=', group_categ.id)])"/>
             <div class="w-100 text-right">
-                <a href="/user_manager/create_user" class="btn btn-primary">
+                <a href="/my/business/users/manager" class="btn btn-primary">
                     Create user
                 </a>
             </div>
@@ -42,25 +44,58 @@
             <t t-if="users" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">
-                        <th>Name #</th>
+                        <th>Name</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>Creation date</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <t t-foreach="users" t-as="user">
-                        <tr>
+                        <tr id="users">
                             <td>
                                 <t t-esc="user.name"/>
                             </td>
                             <td>
                                 <t t-esc="user.login"/>
                             </td>
+                            <td>
+                                <t t-foreach="user_groups" t-as="group">
+                                    <t t-esc="group.name" t-if="group.id in user.groups_id.ids"/>
+                                </t>
+                            </td>
                             <td><span t-field="user.create_date" t-options='{"format": "dd/MM/yyyy"}'/></td>
+                            <td>
+                                <a class="mx-1" t-att-href="'/my/business/users/manager/' + str(user.id)">
+                                    <i class="fa fa-pencil"/>
+                                </a>
+                                <a t-att-id="user.id" class="deactivate mx-1" href="#">
+                                    <i class="fa fa-trash-o"/>
+                                </a>
+                            </td>
                         </tr>
                     </t>
                 </tbody>
             </t>
         </t>
+        <div class="modal" id="confirmDeactivationModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeactivationModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span>&#xD7;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this user?
+                    </div>
+                    <div class="modal-footer">
+                        <a id="confirmDeactivation" class="btn btn-primary" data-dismiss="modal" >Accept</a>
+                        <a class="btn btn-secondary" data-dismiss="modal">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </template>
 </odoo>

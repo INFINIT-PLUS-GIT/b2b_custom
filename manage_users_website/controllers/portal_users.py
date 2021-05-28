@@ -6,20 +6,22 @@ from odoo.addons.portal.controllers.portal import CustomerPortal, pager as porta
 from odoo.http import request
 
 
-class PortalAccount(CustomerPortal):
+class PortalUsers(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
-        values = super(PortalAccount, self)._prepare_portal_layout_values()
-        business_users_count = request.env['res.users'].search_count([('belonging_company_id', '=', request.env.user.belonging_company_id.id)])
+        values = super(PortalUsers, self)._prepare_portal_layout_values()
+        business_users_count = request.env['res.users'].sudo().search_count([('belonging_company_id', '=', request.env.user.belonging_company_id.id),
+                                                                             ('active', '=', True)])
         values['business_users_count'] = business_users_count
         return values
 
     @http.route(['/my/business/users', '/my/business/users/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_transactions(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
-        business_users = request.env['res.users']
+        business_users = request.env['res.users'].sudo()
 
-        domain = [('belonging_company_id', '=', request.env.user.belonging_company_id.id)]
+        domain = [('belonging_company_id', '=', request.env.user.belonging_company_id.id),
+                  ('active', '=', True)]
 
         searchbar_sortings = {
             'date': {'label': _('Date'), 'order': 'create_date desc'},
@@ -29,7 +31,7 @@ class PortalAccount(CustomerPortal):
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
-        #archive_groups = self._get_archive_groups('payment.transaction')
+        # archive_groups = self._get_archive_groups('payment.transaction')
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -44,7 +46,7 @@ class PortalAccount(CustomerPortal):
             step=self._items_per_page
         )
         # content according to pager and archive selected
-        users = business_users.sudo().search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        users = business_users.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
         # request.session['my_transactions_history'] = transactions.ids[:100]
 
         values.update({

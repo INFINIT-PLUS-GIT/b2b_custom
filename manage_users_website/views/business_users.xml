@@ -1,29 +1,6 @@
 <?xml version="1.0" ?>
 <odoo>
     <data>
-        <template id="management_view">
-            <t t-call="website.layout">
-                <div class="row">
-                    <div class="col-md-3 col-xl-2">
-                        <div class="m-5">
-                            <nav>
-                                <ul class="nav flex-column">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="/user_manager/create_user">User management</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/user_manager/payment">Register payment</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                    <main class="col-md-9 col-xl-8 py-md-3 pl-md-5">
-                        <t t-raw="0"/>
-                    </main>
-                </div>
-            </t>
-        </template>
         <template id="management_user_form">
             <t t-call="portal.portal_layout">
                 <t t-set="breadcrumbs_searchbar" t-value="False"/>
@@ -31,23 +8,24 @@
                 <t t-set="group_categ" t-value="request.env['ir.module.category'].sudo().search([('name', '=', 'Business')])"/>
                 <t t-set="user_groups" t-value="request.env['res.groups'].sudo().search([('category_id', '=', group_categ.id)])"/>
                 <div id="user_form">
-                    <h1>Create user</h1>
+                    <h1 t-if="data.get('name')">Edit user</h1>
+                    <h1 t-else="">Create user</h1>
                     <form id="createUserForm">
+                        <input type="hidden" id="uid" name="uid" t-att-value="data.get('uid')"/>
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name"/>
+                            <input type="text" class="form-control" id="name" name="name" t-att-value="data.get('name')"/>
                         </div>
                         <div class="form-group">
                             <label for="login">Email address</label>
-                            <input type="email" class="form-control" id="login" name="login"/>
+                            <input type="email" class="form-control" id="login" name="login" t-att-value="data.get('login')"/>
                         </div>
                         <div class="form-group">
                             <label for="role">Role</label>
                             <select class="form-control" id="role" name="role">
                                 <option>Select...</option>
                                 <t t-foreach="user_groups" t-as="group">
-                                    <option t-att-value="group.id">
-                                        <!--                                            t-att-selected="group.id == int(country_id) if country_id else country.id == partner.country_id.id">-->
+                                    <option t-att-value="group.id" t-att-selected="group.id == data.get('role')">
                                         <t t-esc="group.name"/>
                                     </option>
                                 </t>
@@ -55,7 +33,7 @@
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" name="password"/>
+                            <input type="password" class="form-control" id="password" name="password" t-att-value="data.get('password')" t-att-readonly="data.get('password')"/>
                         </div>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
@@ -70,18 +48,15 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                User created successfully
+                                <p t-if="data.get('name')">User created successfully</p>
+                                <p t-else="">User updated successfully</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal" href="/my/business/users">Close</button>
+                                <a class="btn btn-primary" data-dismiss="modal" onclick="window.location.href = '/my/business/users'">Accept</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </t>
-        </template>
-        <template id="payment_management">
-            <t t-call="manage_users_website.management_view">
             </t>
         </template>
     </data>

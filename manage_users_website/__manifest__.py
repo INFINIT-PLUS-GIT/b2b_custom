@@ -31,7 +31,7 @@
         'security/res_group.xml',
         'views/assets.xml',
         'views/user_create.xml',
-        'views/templates.xml',
+        'views/business_users.xml',
         'views/portal_users.xml',
     ],
 }
