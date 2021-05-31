@@ -14,31 +14,42 @@ odoo.define('manage_users_website.user_management', ['web.rpc'], function (requi
 
     $('#createUserForm').on('submit', function (e) {
         e.preventDefault();
-        console.log($(this).attr("action"))
-        console.log($(this).serializeArray())
+        $('#loader').modal({
+            show: true,
+            keyboard: false,
+            backdrop: 'static'
+        })
         var formData = objectifyForm($(this).serializeArray());
         rpc.query({
             model: 'res.users',
             method: 'create_user',
             args: [formData],
         }).then(function (data) {
+            $("#loader").removeClass("in");
+            $(".modal-backdrop").remove();
+            $('#loader').modal('hide')
             $('#confirmModal').modal('show')
         })
     })
 
-    $('#users a.deactivate').on('click', function () {
-        deactivate_id = $(this).attr('id');
-        $('#confirmDeactivationModal').modal('show');
-    })
-
-    $('#confirmDeactivation').on('click', function () {
-        rpc.query({
-            model: 'res.users',
-            method: 'deactivate_user',
-            args: [deactivate_id],
-        }).then(function (data) {
-            location.reload();
+    $('#users input[type=checkbox]').change(function () {
+        deactivate_id = parseInt($(this).parent().attr('id'));
+        $('#loader').modal({
+            show: true,
+            keyboard: false,
+            backdrop: 'static'
         })
+        var status = rpc.query({
+            model: 'res.users',
+            method: 'toggle_user_active',
+            args: [deactivate_id],
+        });
+
+        status.then(function (data) {
+            $("#loader").removeClass("in");
+            $(".modal-backdrop").remove();
+            $('#loader').modal('hide')
+        });
     })
 
 });

@@ -10,8 +10,9 @@ class PortalUsers(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(PortalUsers, self)._prepare_portal_layout_values()
-        business_users_count = request.env['res.users'].sudo().search_count([('belonging_company_id', '=', request.env.user.belonging_company_id.id),
-                                                                             ('active', '=', True)])
+        business_users_count = request.env['res.users'].sudo().search_count([
+            ('belonging_company_id', '=', request.env.user.belonging_company_id.id), '|',
+            ('active', '=', False), ('active', '=', True)])
         values['business_users_count'] = business_users_count
         return values
 
@@ -20,8 +21,8 @@ class PortalUsers(CustomerPortal):
         values = self._prepare_portal_layout_values()
         business_users = request.env['res.users'].sudo()
 
-        domain = [('belonging_company_id', '=', request.env.user.belonging_company_id.id),
-                  ('active', '=', True)]
+        domain = [('belonging_company_id', '=', request.env.user.belonging_company_id.id), '|',
+                  ('active', '=', False), ('active', '=', True)]
 
         searchbar_sortings = {
             'date': {'label': _('Date'), 'order': 'create_date desc'},
