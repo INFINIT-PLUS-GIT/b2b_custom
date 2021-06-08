@@ -16,10 +16,19 @@
 
     <template id="portal_my_home_business_users" name="Portal My Home : transaction entries" inherit_id="portal.portal_my_home" priority="30">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-            <t t-if="business_users_count" t-call="portal.portal_docs_entry">
-                <t t-set="title">Business users</t>
-                <t t-set="url" t-value="'/my/business/users'"/>
-                <t t-set="count" t-value="business_users_count"/>
+            <!--
+                        <t t-if="business_users_count" t-call="portal.portal_docs_entry">
+                            <t t-set="title">Business users</t>
+                            <t t-set="url" t-value="'/my/business/users'"/>
+                            <t t-set="count" t-value="business_users_count"/>
+                        </t>
+            -->
+            <t t-foreach="request.env.user.get_portal_business_menu()" t-as="menu">
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="title" t-value="menu['name']"/>
+                    <t t-set="url" t-value="menu['portal_url'] + '?maids=' + menu['maids']"/>
+                    <!--                <t t-set="count" t-value="business_users_count"/>-->
+                </t>
             </t>
         </xpath>
     </template>
@@ -33,7 +42,7 @@
             </t>
             <t t-set="group_categ" t-value="request.env['ir.module.category'].sudo().search([('name', '=', 'Business')])"/>
             <t t-set="user_groups" t-value="request.env['res.groups'].sudo().search([('category_id', '=', group_categ.id)])"/>
-            <div class="w-100 text-right">
+            <div class="w-100 text-right" t-if="access_rights.get('create')">
                 <a href="/my/business/users/manager" class="btn btn-primary">
                     Create user
                 </a>
@@ -49,7 +58,7 @@
                         <th>Role</th>
                         <th>Creation date</th>
                         <th>State</th>
-                        <th>Action</th>
+                        <th t-if="access_rights.get('write')">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -69,11 +78,12 @@
                             <td><span t-field="user.create_date" t-options='{"format": "dd/MM/yyyy"}'/></td>
                             <td>
                                 <div t-att-id="user.id" class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" t-att-id="'userState-'+str(user.id)" t-att-checked="user.active"/>
+                                    <input type="checkbox" class="custom-control-input" t-att-id="'userState-'+str(user.id)" t-att-checked="user.active"
+                                    t-att-disabled="not access_rights.get('write')"/>
                                     <label class="custom-control-label" t-att-for="'userState-'+str(user.id)"></label>
                                 </div>
                             </td>
-                            <td>
+                            <td t-if="access_rights.get('write')">
                                 <a class="mx-1" t-att-href="'/my/business/users/manager/' + str(user.id)">
                                     <i class="fa fa-pencil"/>
                                 </a>

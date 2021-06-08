@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="module_group_management">
+            <field name="name">manage_users_website.groups_view_inherit</field>
+            <field name="model">res.groups</field>
+            <field name="inherit_id" ref="base.view_groups_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_access']/tree" position="inside">
+                    <field name="portal_url"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

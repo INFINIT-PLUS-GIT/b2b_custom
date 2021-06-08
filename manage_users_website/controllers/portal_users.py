@@ -50,6 +50,18 @@ class PortalUsers(CustomerPortal):
         users = business_users.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
         # request.session['my_transactions_history'] = transactions.ids[:100]
 
+        url_params = dict(kw)
+        read = False
+        create = False
+        write = False
+        maids = url_params.get('maids')
+        if maids:
+            accesses = request.env['ir.model.access'].sudo().search([('id', 'in', maids.split(','))])
+            for access in accesses:
+                read = access.perm_read or read
+                create = access.perm_create or create
+                write = access.perm_write or write
+
         values.update({
             'date': date_begin,
             'users': users,
@@ -58,5 +70,11 @@ class PortalUsers(CustomerPortal):
             'default_url': '/my/business/users',
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
+            'access_rights': {
+                'read': read,
+                'create': create,
+                'write': write
+            },
+            'maids': maids
         })
         return request.render("manage_users_website.portal_my_business_users", values)

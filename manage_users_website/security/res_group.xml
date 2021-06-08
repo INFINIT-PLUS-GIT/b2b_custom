@@ -24,5 +24,14 @@
             <field name="category_id" ref="module_user_management"/>
             <field name="implied_ids" eval="[(4, ref('business_buyer'))]"/>
         </record>
+        <record id="rule_id" model="ir.rule">
+            <field name="name">Business users</field>
+            <field name="model_id" ref="manage_users_website.model_res_users"/>
+            <field name="domain_force">[('belonging_company_id', '=', user.belonging_company_id.id)]</field>
+            <field name="groups" eval="[(4,ref('manage_users_website.business_administrator')),
+            (4,ref('manage_users_website.business_buyer')),
+            (4,ref('manage_users_website.business_reader')),
+            (4,ref('manage_users_website.business_client'))]"/>
+        </record>
     </data>
 </odoo>

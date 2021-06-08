@@ -48,8 +48,8 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p t-if="data.get('name')">User created successfully</p>
-                                <p t-else="">User updated successfully</p>
+                                <p t-if="data.get('password')">User updated successfully</p>
+                                <p t-else="">User created successfully</p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-primary" data-dismiss="modal" onclick="window.location.href = '/my/business/users'">Accept</button>

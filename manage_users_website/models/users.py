@@ -17,7 +17,7 @@ class Users(models.Model):
         self.env.cr.commit()
 
     @api.model
-    def create_user(self, data):
+    def create_business_user(self, data):
         role_id = data['role']
         del data['role']
         if data.get('uid'):
@@ -43,3 +43,21 @@ class Users(models.Model):
         return {
             "status": "ok"
         }
+
+    def get_portal_business_menu(self):
+        query = """
+            SELECT ma.portal_url, STRING_AGG(ma.id::character varying, ',') maids, MIN(ma.name) AS name, COUNT(ma.name) AS count
+            FROM ir_model_access ma
+            INNER JOIN res_groups rg ON ma.group_id = rg.id
+            INNER JOIN res_groups_users_rel rgur on rg.id = rgur.gid
+            WHERE ma.portal_url IS NOT NULL
+              AND rg.category_id = (
+                SELECT mc.id
+                FROM ir_module_category mc
+                WHERE mc.name = 'Business'
+            )
+            and rgur.uid = {}
+            GROUP BY ma.portal_url
+        """
+        self._cr.execute(query.format(self.id))
+        return self._cr.dictfetchall()

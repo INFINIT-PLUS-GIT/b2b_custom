@@ -22,7 +22,7 @@ odoo.define('manage_users_website.user_management', ['web.rpc'], function (requi
         var formData = objectifyForm($(this).serializeArray());
         rpc.query({
             model: 'res.users',
-            method: 'create_user',
+            method: 'create_business_user',
             args: [formData],
         }).then(function (data) {
             $("#loader").removeClass("in");

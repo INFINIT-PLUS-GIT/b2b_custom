@@ -1,3 +1,5 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-business_administrator,Business administrator,model_overtime_overtime,overtime_user,1,1,1,0
-access_user,Acess user,model_overtime_overtime,overtime_manager,1,1,1,1
+id,name,model_id:id,group_id:id,portal_url,perm_read,perm_write,perm_create,perm_unlink
+access_res_users_business_administrator,res_users business_administrator,model_res_users,business_administrator,/my/business/users,1,1,1,0
+access_res_users_business_buyer,res_users business_buyer,model_res_users,business_buyer,,0,0,0,0
+access_res_users_business_reader,res_users business_reader,model_res_users,business_reader,,0,0,0,0
+access_res_users_business_client,res_users business_client,model_res_users,business_client,,0,0,0,0
