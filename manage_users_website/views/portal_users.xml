@@ -84,7 +84,7 @@
                                 </div>
                             </td>
                             <td t-if="access_rights.get('write')">
-                                <a class="mx-1" t-att-href="'/my/business/users/manager/' + str(user.id)">
+                                <a class="mx-1" t-att-href="'/my/business/users/manager/' + str(user.id) + '?maids=' + maids">
                                     <i class="fa fa-pencil"/>
                                 </a>
                             </td>

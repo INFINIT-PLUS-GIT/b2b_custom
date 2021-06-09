@@ -12,6 +12,7 @@
                     <h1 t-else="">Create user</h1>
                     <form id="createUserForm">
                         <input type="hidden" id="uid" name="uid" t-att-value="data.get('uid')"/>
+                        <input type="hidden" id="maids" name="maids" t-att-value="data.get('maids')"/>
                         <div class="form-group">
                             <label for="name">Name</label>
                             <input type="text" class="form-control" id="name" name="name" t-att-value="data.get('name')"/>
@@ -35,7 +36,8 @@
                             <label for="password">Password</label>
                             <input type="password" class="form-control" id="password" name="password" t-att-value="data.get('password')" t-att-readonly="data.get('password')"/>
                         </div>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button id="btn-update" type="submit" class="btn btn-primary" t-if="data.get('password') and data.get('access_rights')['create']">Save</button>
+                        <button id="btn-create" type="submit" class="btn btn-primary" t-if="not data.get('password') and data.get('access_rights')['write']">Save</button>
                     </form>
                 </div>
 
@@ -48,8 +50,8 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p t-if="data.get('password')">User updated successfully</p>
-                                <p t-else="">User created successfully</p>
+                                <p id="modal-message" t-if="data.get('password')">User updated successfully</p>
+                                <p id="modal-message" t-else="">User created successfully</p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-primary" data-dismiss="modal" onclick="window.location.href = '/my/business/users'">Accept</button>

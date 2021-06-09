@@ -18,6 +18,21 @@ class PortalUsers(CustomerPortal):
 
     @http.route(['/my/business/users', '/my/business/users/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_transactions(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+        url_params = dict(kw)
+        read = False
+        create = False
+        write = False
+        maids = url_params.get('maids')
+        if maids:
+            accesses = request.env['ir.model.access'].sudo().search([('id', 'in', maids.split(','))])
+            for access in accesses:
+                read = access.perm_read or read
+                create = access.perm_create or create
+                write = access.perm_write or write
+        else:
+            return request.redirect('/my/home')
+        if not read:
+            return request.redirect('/my/home')
         values = self._prepare_portal_layout_values()
         business_users = request.env['res.users'].sudo()
 
@@ -49,18 +64,6 @@ class PortalUsers(CustomerPortal):
         # content according to pager and archive selected
         users = business_users.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
         # request.session['my_transactions_history'] = transactions.ids[:100]
-
-        url_params = dict(kw)
-        read = False
-        create = False
-        write = False
-        maids = url_params.get('maids')
-        if maids:
-            accesses = request.env['ir.model.access'].sudo().search([('id', 'in', maids.split(','))])
-            for access in accesses:
-                read = access.perm_read or read
-                create = access.perm_create or create
-                write = access.perm_write or write
 
         values.update({
             'date': date_begin,

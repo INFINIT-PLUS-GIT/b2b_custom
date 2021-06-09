@@ -29,6 +29,7 @@ odoo.define('manage_users_website.user_management', ['web.rpc'], function (requi
             $(".modal-backdrop").remove();
             $('#loader').modal('hide')
             $('#confirmModal').modal('show')
+            if (data.status === 'not-allowed') $('#modal-message').text("You don't have permission to this action")
         })
     })
 

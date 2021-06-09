@@ -14,11 +14,15 @@ class ManageUsersWebsite(http.Controller):
         write = False
         maids = url_params.get('maids')
         if maids:
-            accesses = request.env['ir.model.access'].sudo().search([('id', 'in', maids).split(',')])
+            accesses = request.env['ir.model.access'].sudo().search([('id', 'in', maids.split(','))])
             for access in accesses:
                 read = access.perm_read or read
                 create = access.perm_create or create
                 write = access.perm_write or write
+        else:
+            return request.redirect('/my/home')
+        if not read:
+            return request.redirect('/my/home')
         data = {
             'access_rights': {
                 'read': read,
