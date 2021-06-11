@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,portal_url,perm_read,perm_write,perm_create,perm_unlink
+access_account_move_business_buyer,Business payments,model_account_move,manage_users_website.business_buyer,/my/business/payments,1,1,1,0

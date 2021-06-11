@@ -1,0 +1,115 @@
+<!-- ##########################################################################
+#
+#   Copyright (c) 2018-Present INFINIT-PLUS CIA. LTDA. (<https://www.infinit-plus.com/>)
+#   See LICENSE file for full copyright and licensing details.
+#   "License URL : <https://www.infinit-plus.com/license.html/>"
+#
+########################################################################## -->
+<odoo>
+    <template id="portal_my_home_menu_buss_invoices" name="Portal layout : business invoices menu" inherit_id="portal.portal_breadcrumbs" priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li class="breadcrumb-item active">
+                Business invoices
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_business_invoices" name="Business invoices">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Business invoices</t>
+            </t>
+            <t t-set="group_categ" t-value="request.env['ir.module.category'].sudo().search([('name', '=', 'Business')])"/>
+            <t t-set="user_groups" t-value="request.env['res.groups'].sudo().search([('category_id', '=', group_categ.id)])"/>
+<!--
+            <div class="w-100 text-right" t-if="access_rights.get('create')">
+                <a href="/my/business/invoices/manager" class="btn btn-primary">
+                    Create user
+                </a>
+            </div>
+-->
+            <t t-if="not invoices">
+                <p>There are currently no invoices for this business.</p>
+            </t>
+            <t t-if="invoices" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th t-if="access_rights.get('write')"></th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Number</th>
+                        <th>Due date</th>
+                        <th>Total</th>
+                        <th>Due amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="invoices" t-as="invoice">
+                        <tr id="invoices">
+                            <td t-if="access_rights.get('write')">
+                                <div t-att-id="invoice.id" class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" t-att-id="'invoice-'+str(invoice.id)" t-att-disabled="not access_rights.get('write')"/>
+                                    <label class="custom-control-label" t-att-for="'invoice-'+str(invoice.id)"></label>
+                                </div>
+                            </td>
+                            <td>
+                                <t t-esc="invoice.move_type"/>
+                            </td>
+                            <td>
+                                <t t-esc="invoice.date"/>
+                            </td>
+                            <td>
+                                <t t-esc="invoice.name"/>
+                            </td>
+                            <td>
+                                <t t-esc="invoice.invoice_date_due"/>
+                            </td>
+                            <td>
+                                <t t-esc="invoice.amount_total_signed"/>
+                            </td>
+                            <td>
+                                <t t-esc="invoice.amount_residual_signed"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+            <div class="w-100 text-right" t-if="access_rights.get('create')">
+                <a class="btn btn-primary">
+                    Create payment
+                </a>
+            </div>
+        </t>
+        <div class="modal" id="createPaymentModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeactivationModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span>&#xD7;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this user?
+                    </div>
+                    <div class="modal-footer">
+                        <a id="confirmDeactivation" class="btn btn-primary" data-dismiss="modal">Accept</a>
+                        <a class="btn btn-secondary" data-dismiss="modal">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="loader" tabindex="-1" role="dialog" aria-labelledby="loaderLabel">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                <div class="w-100">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>
