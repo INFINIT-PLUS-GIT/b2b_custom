@@ -5,10 +5,10 @@ from odoo.addons.portal.controllers.portal import CustomerPortal, pager as porta
 from odoo.http import request
 
 
-class PortalUsers(CustomerPortal):
+class PortalPayments(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
-        values = super(PortalUsers, self)._prepare_portal_layout_values()
+        values = super(PortalPayments, self)._prepare_portal_layout_values()
         business_users_count = request.env['res.users'].search_count([
             ('belonging_company_id', '=', request.env.user.belonging_company_id.id), '|',
             ('active', '=', False), ('active', '=', True)])
@@ -16,7 +16,7 @@ class PortalUsers(CustomerPortal):
         return values
 
     @http.route(['/my/business/payments', '/my/business/payments/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_transactions(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_payments(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         url_params = dict(kw)
         read = False
         create = False

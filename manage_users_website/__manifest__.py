@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "<anage users website",
+    'name': "Manage business users from website",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
